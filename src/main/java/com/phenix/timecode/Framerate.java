@@ -10,7 +10,7 @@ public enum Framerate {
     /**
      * Framerate 23,976is.
      */
-    F23976(23976D, false),
+    F23976(23.976D, false),
     /**
      * Framerate 24is (cinéma/Blu-ray).
      */
@@ -22,7 +22,15 @@ public enum Framerate {
     /**
      * Framerate 29,97 (NTSC TV).
      */
-    F2997(2997D, true);
+    F2997(29.97D, true),
+    /**
+     * Framerate 29,97 (NTSC TV).
+     */
+    F2997ND(29.97D, false),
+    /**
+     * Framerate 30 (NTSC TV).
+     */
+    F30(30D, false);
 
     /**
      * Valeur à utiliser.
@@ -52,5 +60,14 @@ public enum Framerate {
      */
     public double getValeur() {
         return this.framerate;
+    }
+
+    /**
+     * Retourne si le framerate est en dropframe ou non.
+     *
+     * @return Le dropframe.
+     */
+    public boolean getDropFrame() {
+        return this.drop_frame;
     }
 }

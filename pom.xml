@@ -4,7 +4,7 @@
     <groupId>com.phenix</groupId>
     <artifactId>timecode</artifactId>
     <name>Timecode</name>
-    <version>0.6.0</version>
+    <version>0.7.0</version>
     <packaging>jar</packaging>
     <url>https://github.com/edouard333/Timecode</url>
     
@@ -15,11 +15,100 @@
         </developer>
     </developers>
     
+    <build>
+        <!-- Nom du JAR par défaut. -->
+        <finalName>${project.name}-${project.version}</finalName>
+        
+        <plugins>
+            <!-- Ajoute le code source dans Maven. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        
+            <!-- Ajoute la JavaDoc dans Maven. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadoc</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- Pour le coverage mode. -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.11</version>
+                <configuration>
+                    <skip>${skipTests}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- Pour permettre d'utiliser vraiment JUnit ... en tout cas l'annotation "@BeforeEach". -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <skipTests>${skipTests}</skipTests>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <dependencies>
+        <!-- Avoir les options d'annotation JUnit. -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <!-- Type d'application : "graphic", "console" ou "library". -->
         <appType>library</appType>
+        <!-- Nom de l'application. -->
+        <appName>Timecode</appName>
+        <!-- Pour l'instant comme ça pour indiquer la version. -->
+        <appVersion>${project.version}</appVersion>
+        <!-- Indique si on saute ou non les tests (et du coup le coverage mode). -->
+        <skipTests>true</skipTests>
     </properties>
 </project>
