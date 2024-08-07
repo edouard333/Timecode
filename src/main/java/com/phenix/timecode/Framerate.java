@@ -74,6 +74,25 @@ public enum Framerate {
     }
 
     /**
+     *
+     * @param value
+     * @return
+     */
+    public static Framerate fromValue(double value) {
+        Framerate[] liste_framerate = values();
+
+        Framerate framerate;
+        for (int i = 0; i < liste_framerate.length; i++) {
+            framerate = liste_framerate[i];
+            if (framerate.getValeur() == value) {
+                return framerate;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Retourne le framerate.
      *
      * @return Le framerate.

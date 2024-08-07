@@ -4,7 +4,7 @@
     <groupId>com.phenix</groupId>
     <artifactId>timecode</artifactId>
     <name>Timecode</name>
-    <version>0.7.1</version>
+    <version>0.7.2</version>
     <packaging>jar</packaging>
     <url>https://github.com/edouard333/Timecode</url>
     
