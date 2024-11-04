@@ -15,6 +15,5 @@
         -->
         <netbeans.hint.jdkPlatform>JDK_17</netbeans.hint.jdkPlatform>
         <netbeans.hint.license>default_1</netbeans.hint.license>
-        <org-netbeans-modules-javascript2-requirejs.enabled>true</org-netbeans-modules-javascript2-requirejs.enabled>
     </properties>
 </project-shared-configuration>

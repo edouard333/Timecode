@@ -1,5 +1,8 @@
 package com.phenix.timecode;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+
 /**
  * Liste les différents framerates.
  *
@@ -54,18 +57,17 @@ public enum Framerate {
     }
 
     /**
+     * Retourne un {@code Framerate} en fonction d'une valeur en {@code String}.
      *
-     * @param value
-     * @return
+     * @param value La valeur.
+     * @return Soite le {@code Framerate} associé sinon {@code null}.
      */
-    public static Framerate fromValue(String value) {
+    @Null
+    public static Framerate fromValue(@NotNull String value) {
         double value_d = Double.parseDouble(value);
-        Framerate[] liste_framerate = values();
 
-        Framerate framerate;
-        for (int i = 0; i < liste_framerate.length; i++) {
-            framerate = liste_framerate[i];
-            if (framerate.getValeur() == value_d) {
+        for (Framerate framerate : values()) {
+            if (framerate.framerate == value_d) {
                 return framerate;
             }
         }
@@ -74,17 +76,15 @@ public enum Framerate {
     }
 
     /**
+     * Retourne un {@code Framerate} en fonction d'une valeur en {@code double}.
      *
-     * @param value
-     * @return
+     * @param value La valeur.
+     * @return Soite le {@code Framerate} associé sinon {@code null}.
      */
+    @Null
     public static Framerate fromValue(double value) {
-        Framerate[] liste_framerate = values();
-
-        Framerate framerate;
-        for (int i = 0; i < liste_framerate.length; i++) {
-            framerate = liste_framerate[i];
-            if (framerate.getValeur() == value) {
+        for (Framerate framerate : values()) {
+            if (framerate.framerate == value) {
                 return framerate;
             }
         }

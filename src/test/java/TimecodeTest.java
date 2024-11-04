@@ -219,7 +219,6 @@ public class TimecodeTest {
             if (erreur) {
                 System.out.println(i + " -> TC " + from_image.toImage() + " / " + from_image.toString() + " -> " + from_smpte.toImage() + " / " + from_smpte.toString());
             }
-
         }
     }
 

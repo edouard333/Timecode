@@ -1,5 +1,6 @@
 package com.phenix.timecode;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -17,7 +18,7 @@ import java.util.Scanner;
  *
  * @author <a href="mailto:edouard128@hotmail.com">Edouard Jeanjean</a>
  */
-public class Timecode {
+public final class Timecode {
 
     /**
      * Heure du timecode.
@@ -86,7 +87,7 @@ public class Timecode {
      * @param timecode Le timecode sous forme de {@code String}
      * ("<em>HH:mm:ss:ii</em>").
      */
-    public Timecode(String timecode) {
+    public Timecode(@NotNull String timecode) {
         // Si le timecode contient un ";", alors c'est en drop-frame.
         this(timecode, -1, Timecode.isDropFrame(timecode));
     }
@@ -98,7 +99,7 @@ public class Timecode {
      * ("<em>HH:mm:ss:ii</em>").
      * @param framerate Le framerate du timecode.
      */
-    public Timecode(String timecode, Framerate framerate) {
+    public Timecode(String timecode, @NotNull Framerate framerate) {
         this(timecode, framerate.getValeur(), framerate.getDropFrame());
     }
 
@@ -109,7 +110,7 @@ public class Timecode {
      * ("<em>HH:mm:ss:ii</em>").
      * @param framerate Le framerate du timecode.
      */
-    public Timecode(String timecode, double framerate) {
+    public Timecode(@NotNull String timecode, double framerate) {
         // Si le timecode contient un ";", alors c'est en drop-frame.
         this(timecode, framerate, Timecode.isDropFrame(timecode));
     }
@@ -122,7 +123,7 @@ public class Timecode {
      * @param framerate Le framerate du timecode.
      * @param drop_frame Si le timecode est en drop-frame ou non.
      */
-    public Timecode(String timecode, double framerate, boolean drop_frame) {
+    public Timecode(@NotNull String timecode, double framerate, boolean drop_frame) {
         try {
             Scanner sc = new Scanner(timecode);
             sc.useDelimiter(":");
@@ -162,7 +163,7 @@ public class Timecode {
      * @param nombre_image Durée en nombre d'images.
      * @param framerate Framerate du timecode.
      */
-    public Timecode(int nombre_image, Framerate framerate) {
+    public Timecode(int nombre_image, @NotNull Framerate framerate) {
         this(nombre_image, framerate.getValeur(), framerate.getDropFrame());
     }
 
@@ -183,6 +184,7 @@ public class Timecode {
      *
      * @param nombre_image Durée en nombre d'images.
      * @param framerate Framerate du timecode.
+     * @param drop_frame {@code true} si c'est un timecode drop frame.
      */
     public Timecode(int nombre_image, double framerate, boolean drop_frame) {
         this.nombre_image = nombre_image;
@@ -214,8 +216,9 @@ public class Timecode {
      * @param minute Minute du timecode.
      * @param seconde Seconde du timecode.
      * @param image Image du timecode.
+     * @param framerate Le framerate.
      */
-    public Timecode(int heure, int minute, int seconde, int image, Framerate framerate) {
+    public Timecode(int heure, int minute, int seconde, int image, @NotNull Framerate framerate) {
         this(heure, minute, seconde, image, framerate.getValeur(), framerate.getDropFrame());
     }
 
@@ -242,6 +245,7 @@ public class Timecode {
      * @param seconde Seconde du timecode.
      * @param image Image du timecode.
      * @param framerate Framerate du timecode.
+     * @param drop_frame {@code true} si c'est un timecode drop frame.
      */
     public Timecode(int heure, int minute, int seconde, int image, double framerate, boolean drop_frame) {
         this.heure = heure;
@@ -272,6 +276,19 @@ public class Timecode {
      *
      * @throws Exception Le timecode de début n'a pas été renseigné.
      */
+    public void changeFramerate(Framerate framerate) throws Exception {
+        changeFramerate(framerate.getValeur());
+    }
+
+    /**
+     * Change d'un framerate à l'autre.<br>
+     * On doit spécifier le timecode début via
+     * {@link Timecode#setStartTimecode(String) setStartTimecode(String)}.
+     *
+     * @param framerate Le nouveau framerate.
+     *
+     * @throws Exception Le timecode de début n'a pas été renseigné.
+     */
     public void changeFramerate(double framerate) throws Exception {
         if (this.timecode_debut == null || this.timecode_debut.isEmpty()) {
             throw new Exception("Le timecode de début n'a pas été renseigné.");
@@ -286,9 +303,13 @@ public class Timecode {
     /**
      * Représente un nombre en "digit".
      *
+     * @deprecated Utiliser la fonction standard créée.
+     *
      * @param valeur La valeur à convertir en digit (0-9).
      * @return String
      */
+    @Deprecated
+    @NotNull
     private String digit(int valeur) {
         return (valeur <= 9) ? "0" + valeur : "" + valeur;
     }
@@ -298,6 +319,7 @@ public class Timecode {
      *
      * @return Timecode en 29,97 DF.
      */
+    @NotNull
     private String dropFrame() {
         int nombre_image_tmp = (this.heure * 60 * 60 * 30) + (this.minute * 60 * 30) + (this.seconde * 30) + this.image;
 
@@ -376,7 +398,7 @@ public class Timecode {
         } // Si c'est du 25 i/s :
         else if (this.framerate == Framerate.F25.getValeur()) {
             return 25;
-        } // Si c'est du 29,97 i/s NDF, 29,76 DF ou du 30 i/s :.
+        } // Si c'est du 29,97 i/s NDF, 29,76 DF ou du 30 i/s :
         else if (this.framerate == Framerate.F2997.getValeur() || this.framerate == Framerate.F2997ND.getValeur() || this.framerate == Framerate.F30.getValeur()) {
             return 30;
         } // Sinon, on tente une conversion en int :
@@ -409,7 +431,7 @@ public class Timecode {
      * @param timecode Le timecode en SMPT.
      * @return {@code true} si le timecode est drop-frame, sinon {@code false}.
      */
-    public static boolean isDropFrame(String timecode) {
+    public static boolean isDropFrame(@NotNull String timecode) {
         return timecode.contains(";");
     }
 
@@ -502,6 +524,7 @@ public class Timecode {
      * @return Le timecode en {@code String}.
      */
     @Override
+    @NotNull
     public String toString() {
         if (doit_etre_calcule) {
             nombreImageToInt();
