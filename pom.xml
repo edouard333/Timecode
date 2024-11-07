@@ -4,7 +4,7 @@
     <groupId>com.phenix</groupId>
     <artifactId>timecode</artifactId>
     <name>Timecode</name>
-    <version>0.7.4</version>
+    <version>0.7.5</version>
     <packaging>jar</packaging>
     <url>https://github.com/edouard333/Timecode</url>
     
@@ -106,10 +106,6 @@
         <maven.compiler.target>17</maven.compiler.target>
         <!-- Type d'application : "graphic", "console" ou "library". -->
         <appType>library</appType>
-        <!-- Nom de l'application. -->
-        <appTitle>Timecode</appTitle>
-        <!-- Pour l'instant comme ça pour indiquer la version. -->
-        <appVersion>${project.version}</appVersion>
         <!-- Indique si on saute ou non les tests (et du coup le coverage mode). -->
         <skipTests>true</skipTests>
     </properties>
