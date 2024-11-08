@@ -3,6 +3,6 @@
  */
 module com.phenix.timecode {
     requires jakarta.validation;
-    
+
     exports com.phenix.timecode;
 }
