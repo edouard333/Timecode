@@ -538,8 +538,7 @@ public final class Timecode {
      *
      * @param image_utile Si {@code true} alors le nombre d'images en tenant
      * compte que des images utiles.<br>
-     * Doit définir le timecode début via
-     * {@link #setStartTimecode(String)}.
+     * Doit définir le timecode début via {@link #setStartTimecode(String)}.
      * @return Le nombre d'images que représente le timecode.
      */
     public int toImage(boolean image_utile) {
