@@ -1,7 +1,10 @@
 package com.phenix.timecode;
 
+import com.phenix.timecode.exceptions.TimecodeException;
+import com.phenix.timecode.exceptions.TimecodeRuntimeException;
 import jakarta.validation.constraints.NotNull;
 import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -140,7 +143,9 @@ public final class Timecode {
 
             sc.close();
         } catch (InputMismatchException exception) {
-            throw new InputMismatchException("Le timecode n'est pas correctement formaté : " + timecode);
+            throw new TimecodeRuntimeException("Le timecode n'est pas correctement formaté : " + timecode);
+        } catch (NoSuchElementException exception) {
+            throw new TimecodeRuntimeException("Le timecode n'est pas correctement formaté : " + timecode);
         }
     }
 
@@ -270,28 +275,28 @@ public final class Timecode {
     /**
      * Change d'un framerate à l'autre.<br>
      * On doit spécifier le timecode début via
-     * {@link Timecode#setStartTimecode(String) setStartTimecode(String)}.
+     * {@link #setStartTimecode(String)}.
      *
      * @param framerate Le nouveau framerate.
      *
-     * @throws Exception Le timecode de début n'a pas été renseigné.
+     * @throws TimecodeException Le timecode de début n'a pas été renseigné.
      */
-    public void changeFramerate(Framerate framerate) throws Exception {
-        changeFramerate(framerate.getValeur());
+    public void changeFramerate(Framerate framerate) throws TimecodeException {
+        this.changeFramerate(framerate.getValeur());
     }
 
     /**
      * Change d'un framerate à l'autre.<br>
      * On doit spécifier le timecode début via
-     * {@link Timecode#setStartTimecode(String) setStartTimecode(String)}.
+     * {@link #setStartTimecode(String)}.
      *
      * @param framerate Le nouveau framerate.
      *
-     * @throws Exception Le timecode de début n'a pas été renseigné.
+     * @throws TimecodeException Le timecode de début n'a pas été renseigné.
      */
-    public void changeFramerate(double framerate) throws Exception {
+    public void changeFramerate(double framerate) throws TimecodeException {
         if (this.timecode_debut == null || this.timecode_debut.isEmpty()) {
-            throw new Exception("Le timecode de début n'a pas été renseigné.");
+            throw new TimecodeException("Le timecode de début n'a pas été renseigné.");
         }
 
         int image_utile = toImage() - new Timecode(this.timecode_debut, this.framerate).toImage();
@@ -353,6 +358,39 @@ public final class Timecode {
         }
 
         return digit(heure_tmp) + ":" + digit(minute_tmp) + ":" + digit(seconde_tmp) + ";" + digit(image_tmp);
+    }
+
+    /**
+     * Retourne si le timecode est dans l'interval donné en paramètre.
+     *
+     * @param interval L'interval.
+     * @return {@code true} si le timecode est dans l'interval.
+     */
+    public boolean entre(IntervalTimecode interval) {
+        return entre(this, interval.getTimecodeIn(), interval.getTimecodeOut());
+    }
+
+    /**
+     * Retourne si le timecode est dans l'interval des timecodes in et out.
+     *
+     * @param tc_in Timecode in.
+     * @param tc_out Timecode out.
+     * @return {@code true} si le timecode est dans l'interval.
+     */
+    public boolean entre(Timecode tc_in, Timecode tc_out) {
+        return entre(this, tc_in, tc_out);
+    }
+
+    /**
+     * Retourne si le timecode est dans l'interval des timecodes in et out
+     *
+     * @param tc Le timecode à vérifier.
+     * @param tc_in Timecode in.
+     * @param tc_out Timecode out.
+     * @return {@code true} si le timecode est dans l'interval.
+     */
+    public static boolean entre(Timecode tc, Timecode tc_in, Timecode tc_out) {
+        return (tc_in.toImage() <= tc.toImage() && tc.toImage() <= tc_out.toImage());
     }
 
     /**
@@ -468,7 +506,7 @@ public final class Timecode {
     /**
      * Modifie le framerate.<br>
      * Pour changer de timecode (existant vers un autre), utiliser
-     * {@link Timecode#changeFramerate(double) changeFramerate(double)}.
+     * {@link #changeFramerate(double)}.
      *
      * @param framerate Le framerate.
      */
@@ -501,7 +539,7 @@ public final class Timecode {
      * @param image_utile Si {@code true} alors le nombre d'images en tenant
      * compte que des images utiles.<br>
      * Doit définir le timecode début via
-     * {@link Timecode#setStartTimecode(String) setStartTimecode(String)}.
+     * {@link #setStartTimecode(String)}.
      * @return Le nombre d'images que représente le timecode.
      */
     public int toImage(boolean image_utile) {
@@ -539,6 +577,80 @@ public final class Timecode {
             }
         } else {
             return "-1";
+        }
+    }
+
+    /**
+     * Retourne {@code true} si le timecode est valide.
+     *
+     * @param tc Le timecode.
+     * @return {@code true} si le timecode est valide.
+     */
+    public static boolean validation(String tc) {
+        return validation(tc, Framerate.F30);
+    }
+
+    /**
+     * Retourne {@code true} si le timecode est valide et selon son framerate.
+     *
+     * @param tc Le timecode.
+     * @param framerate Le framerate.
+     * @return {@code true} si le timecode est valide.
+     */
+    public static boolean validation(String tc, Framerate framerate) {
+        try {
+            boolean ok = true;
+
+            tc = tc.replace(";", ":");
+
+            String[] split_tc = tc.split(":");
+
+            if (split_tc.length != 4) {
+                ok = false;
+            }
+
+            int split_tc_nb;
+
+            for (int i = 0; i < split_tc.length; i++) {
+                if (split_tc[i].length() != 2) {
+                    ok = false;
+                }
+
+                split_tc_nb = Integer.parseInt(split_tc[i]);
+
+                if (split_tc_nb < 0) {
+                    ok = false;
+                }
+
+                switch (i) {
+                    case 0 -> {
+                        if (split_tc_nb > 24) {
+                            ok = false;
+                        }
+                    }
+                    case 1 -> {
+                        if (split_tc_nb >= 60) {
+                            ok = false;
+                        }
+                    }
+                    case 2 -> {
+                        if (split_tc_nb >= 60) {
+                            ok = false;
+                        }
+                    }
+                    case 3 -> {
+                        // On ne gère pas au dessus du 30 image seconde.
+                        if (split_tc_nb >= framerate.getValeur()) {
+                            ok = false;
+                        }
+                    }
+                }
+            }
+
+            return ok;
+        } // Si une conversion de nombre n'a pas fonctionné c'est que le TC n'est pas conforme. 
+        catch (NumberFormatException exception) {
+            return false;
         }
     }
 }
