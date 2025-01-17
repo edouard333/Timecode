@@ -7,6 +7,7 @@ import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
@@ -64,13 +65,13 @@ public class TimecodeTest {
             Timecode tc2 = new Timecode("00:00:00:00:00");
         });
 
-        assertNotEquals(null, exception_input.getMessage(), "Le message d'erreur ne peut pas être null.");
+        assertNotNull(exception_input.getMessage(), "Le message d'erreur ne peut pas être null.");
 
         NumberFormatException exception_format = assertThrows(NumberFormatException.class, () -> {
             Timecode tc3 = new Timecode("null");
         });
 
-        assertNotEquals(null, exception_format.getMessage(), "Le message d'erreur ne peut pas être null.");
+        assertNotNull(exception_format.getMessage(), "Le message d'erreur ne peut pas être null.");
     }
 
     /**
@@ -236,7 +237,7 @@ public class TimecodeTest {
             tc_1h_24.setStartTimecode(null);
             tc_1h_24.changeFramerate(25D);
         }, "L'erreur ne s'est pas lancée.");
-        assertNotEquals(null, exception_start_tc.getMessage(), "Le message d'erreur ne peut pas être null.");
+        assertNotNull(exception_start_tc.getMessage(), "Le message d'erreur ne peut pas être null.");
 
         tc_1h_24.setStartTimecode("00:00:00:00");
         tc_1h_24.changeFramerate(25D);
