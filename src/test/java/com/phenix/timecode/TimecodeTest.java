@@ -1,12 +1,10 @@
+package com.phenix.timecode;
 
-import com.phenix.timecode.Framerate;
-import com.phenix.timecode.Timecode;
-import java.util.InputMismatchException;
+import com.phenix.timecode.exceptions.TimecodeRuntimeException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -15,11 +13,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
+ * Tests de la classe {@link Timecode}.
  *
  * @author <a href="mailto:edouard128@hotmail.com">Edouard Jeanjean</a>
  */
-public class TimecodeTest {
+public final class TimecodeTest {
 
+    /**
+     *
+     */
     public TimecodeTest() {
     }
 
@@ -59,15 +61,15 @@ public class TimecodeTest {
         Timecode tc = new Timecode();
 
         assertEquals("-1", tc.toString(), "Quand il n'y a pas de timecode, cela doit retourner '-1'.");
-        System.out.println("tc : " + tc.toString());
+        //System.out.println("tc : " + tc.toString());
 
-        InputMismatchException exception_input = assertThrows(InputMismatchException.class, () -> {
-            Timecode tc2 = new Timecode("00:00:00:00:00");
+        TimecodeRuntimeException exception_input = assertThrows(TimecodeRuntimeException.class, () -> {
+            Timecode tc2 = new Timecode("00:00:00");
         });
 
         assertNotNull(exception_input.getMessage(), "Le message d'erreur ne peut pas être null.");
 
-        NumberFormatException exception_format = assertThrows(NumberFormatException.class, () -> {
+        TimecodeRuntimeException exception_format = assertThrows(TimecodeRuntimeException.class, () -> {
             Timecode tc3 = new Timecode("null");
         });
 
@@ -218,7 +220,7 @@ public class TimecodeTest {
             }
 
             if (erreur) {
-                System.out.println(i + " -> TC " + from_image.toImage() + " / " + from_image.toString() + " -> " + from_smpte.toImage() + " / " + from_smpte.toString());
+                //System.out.println(i + " -> TC " + from_image.toImage() + " / " + from_image.toString() + " -> " + from_smpte.toImage() + " / " + from_smpte.toString());
             }
         }
     }

@@ -8,7 +8,7 @@ package com.phenix.timecode.exceptions;
 public class TimecodeException extends Exception {
 
     /**
-     * Construit {@code TimecodeException} avec un message d'erreur.
+     * Construit {@link TimecodeException} avec un message d'erreur.
      *
      * @param message Le message.
      */

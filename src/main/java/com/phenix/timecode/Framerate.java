@@ -57,10 +57,10 @@ public enum Framerate {
     }
 
     /**
-     * Retourne un {@code Framerate} en fonction d'une valeur en {@code String}.
+     * Retourne un {@link Framerate} en fonction d'une valeur en {@code String}.
      *
      * @param value La valeur.
-     * @return Soite le {@code Framerate} associé sinon {@code null}.
+     * @return Soite le {@link Framerate} associé sinon {@code null}.
      */
     @Null
     public static Framerate fromValue(@NotNull String value) {
@@ -76,10 +76,10 @@ public enum Framerate {
     }
 
     /**
-     * Retourne un {@code Framerate} en fonction d'une valeur en {@code double}.
+     * Retourne un {@link Framerate} en fonction d'une valeur en {@code double}.
      *
      * @param value La valeur.
-     * @return Soite le {@code Framerate} associé sinon {@code null}.
+     * @return Soite le {@link Framerate} associé sinon {@code null}.
      */
     @Null
     public static Framerate fromValue(double value) {

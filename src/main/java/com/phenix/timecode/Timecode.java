@@ -2,6 +2,7 @@ package com.phenix.timecode;
 
 import com.phenix.timecode.exceptions.TimecodeException;
 import com.phenix.timecode.exceptions.TimecodeRuntimeException;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
@@ -16,7 +17,7 @@ import java.util.Scanner;
  * * <em>29,976</em> NDF i/s<br>
  * * <em>30</em> i/s<br>
  * <br>
- * Note : pour l'instant, la class ne supporte pas en {@code String} de timecode
+ * Note : pour l'instant, la class ne supporte pas en {@link String} de timecode
  * en drop-frame ("<em>HH:mm:ss;ii</em>").
  *
  * @author <a href="mailto:edouard128@hotmail.com">Edouard Jeanjean</a>
@@ -84,49 +85,49 @@ public final class Timecode {
     }
 
     /**
-     * Construit un timecode sur base d'un {@code String}
+     * Construit un timecode sur base d'un {@link String}
      * ("<em>HH:mm:ss:ii</em>").
      *
-     * @param timecode Le timecode sous forme de {@code String}
+     * @param timecode Le timecode sous forme de {@link String}
      * ("<em>HH:mm:ss:ii</em>").
      */
-    public Timecode(@NotNull String timecode) {
+    public Timecode(@NotNull @NotBlank String timecode) {
         // Si le timecode contient un ";", alors c'est en drop-frame.
         this(timecode, -1, Timecode.isDropFrame(timecode));
     }
 
     /**
-     * Construit un timecode sur base d'un {@code String} et d'un framerate.
+     * Construit un timecode sur base d'un {@link String} et d'un framerate.
      *
-     * @param timecode Le timecode sous forme de {@code String}
+     * @param timecode Le timecode sous forme de {@link String}
      * ("<em>HH:mm:ss:ii</em>").
      * @param framerate Le framerate du timecode.
      */
-    public Timecode(String timecode, @NotNull Framerate framerate) {
+    public Timecode(@NotNull @NotBlank String timecode, @NotNull Framerate framerate) {
         this(timecode, framerate.getValeur(), framerate.getDropFrame());
     }
 
     /**
-     * Construit un timecode sur base d'un {@code String} et d'un framerate.
+     * Construit un timecode sur base d'un {@link String} et d'un framerate.
      *
-     * @param timecode Le timecode sous forme de {@code String}
+     * @param timecode Le timecode sous forme de {@link String}
      * ("<em>HH:mm:ss:ii</em>").
      * @param framerate Le framerate du timecode.
      */
-    public Timecode(@NotNull String timecode, double framerate) {
+    public Timecode(@NotNull @NotBlank String timecode, double framerate) {
         // Si le timecode contient un ";", alors c'est en drop-frame.
         this(timecode, framerate, Timecode.isDropFrame(timecode));
     }
 
     /**
-     * Construit un timecode sur base d'un {@code String} et d'un framerate.
+     * Construit un timecode sur base d'un {@link String} et d'un framerate.
      *
-     * @param timecode Le timecode sous forme de {@code String}
+     * @param timecode Le timecode sous forme de {@link String}
      * ("<em>HH:mm:ss:ii</em>").
      * @param framerate Le framerate du timecode.
      * @param drop_frame Si le timecode est en drop-frame ou non.
      */
-    public Timecode(@NotNull String timecode, double framerate, boolean drop_frame) {
+    public Timecode(@NotNull @NotBlank String timecode, double framerate, boolean drop_frame) {
         try {
             Scanner sc = new Scanner(timecode);
             sc.useDelimiter(":");
@@ -295,7 +296,7 @@ public final class Timecode {
      * @throws TimecodeException Le timecode de début n'a pas été renseigné.
      */
     public void changeFramerate(double framerate) throws TimecodeException {
-        if (this.timecode_debut == null || this.timecode_debut.isEmpty()) {
+        if (this.timecode_debut == null || this.timecode_debut.isBlank()) {
             throw new TimecodeException("Le timecode de début n'a pas été renseigné.");
         }
 
@@ -389,7 +390,7 @@ public final class Timecode {
      * @param tc_out Timecode out.
      * @return {@code true} si le timecode est dans l'interval.
      */
-    public static boolean entre(Timecode tc, Timecode tc_in, Timecode tc_out) {
+    public static boolean entre(@NotNull Timecode tc, @NotNull Timecode tc_in, @NotNull Timecode tc_out) {
         return (tc_in.toImage() <= tc.toImage() && tc.toImage() <= tc_out.toImage());
     }
 
@@ -424,7 +425,7 @@ public final class Timecode {
     /**
      * Retourne le framerate pour faire des calculs en interne.
      *
-     * @return Retourne la valeur du framerate pour calculer le timecode.
+     * @return La valeur du framerate pour calculer le timecode.
      */
     private int getFramerateCalcule() {
         // Si c'est du 23,976 i/s :
@@ -464,7 +465,7 @@ public final class Timecode {
     }
 
     /**
-     * Retourne si un timecode en {@code String} est drop-frame ou non.
+     * Retourne si un timecode en {@link String} est drop-frame ou non.
      *
      * @param timecode Le timecode en SMPT.
      * @return {@code true} si le timecode est drop-frame, sinon {@code false}.
@@ -547,7 +548,7 @@ public final class Timecode {
             this.doit_etre_calcule = false;
         }
 
-        if (this.is_null.isEmpty()) {
+        if (this.is_null.isBlank()) {
             return (this.heure * 60 * 60 * this.getFramerateCalcule()) + (this.minute * 60 * this.getFramerateCalcule()) + (this.seconde * this.getFramerateCalcule()) + (this.image)
                     - ((image_utile) ? new Timecode(this.timecode_debut, this.framerate).toImage() : 0) - (this.drop_frame ? compenserDropFrame() : 0);
         } else {
@@ -556,21 +557,21 @@ public final class Timecode {
     }
 
     /**
-     * Retourne le timecode en {@code String} sous la représentation SMPTE.
+     * Retourne le timecode en {@link String} sous la représentation SMPTE.
      *
-     * @return Le timecode en {@code String}.
+     * @return Le timecode en {@link String}.
      */
     @Override
     @NotNull
     public String toString() {
-        if (doit_etre_calcule) {
-            nombreImageToInt();
-            doit_etre_calcule = false;
+        if (this.doit_etre_calcule) {
+            this.nombreImageToInt();
+            this.doit_etre_calcule = false;
         }
 
-        if (is_null.isEmpty()) {
+        if (this.is_null.isBlank()) {
             if (this.drop_frame) {
-                return dropFrame();
+                return this.dropFrame();
             } else {
                 return digit(this.heure) + ":" + digit(this.minute) + ":" + digit(this.seconde) + ":" + digit(this.image);
             }
@@ -585,7 +586,7 @@ public final class Timecode {
      * @param tc Le timecode.
      * @return {@code true} si le timecode est valide.
      */
-    public static boolean validation(String tc) {
+    public static boolean validation(@NotNull String tc) {
         return validation(tc, Framerate.F30);
     }
 
@@ -596,7 +597,7 @@ public final class Timecode {
      * @param framerate Le framerate.
      * @return {@code true} si le timecode est valide.
      */
-    public static boolean validation(String tc, Framerate framerate) {
+    public static boolean validation(@NotNull String tc, @NotNull Framerate framerate) {
         try {
             boolean ok = true;
 

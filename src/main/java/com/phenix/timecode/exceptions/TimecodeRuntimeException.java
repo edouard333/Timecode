@@ -11,7 +11,7 @@ package com.phenix.timecode.exceptions;
 public class TimecodeRuntimeException extends RuntimeException {
 
     /**
-     * Construit {@code TimecodeRuntimeException} avec un message d'erreur.
+     * Construit {@link TimecodeRuntimeException} avec un message d'erreur.
      *
      * @param message Le message.
      */
