@@ -1,6 +1,7 @@
 package com.phenix.timecode;
 
-import com.phenix.timecode.exceptions.TimecodeRuntimeException;
+import com.phenix.timecode.exception.TimecodeException;
+import com.phenix.timecode.exception.TimecodeRuntimeException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -78,11 +79,9 @@ public final class TimecodeTest {
 
     /**
      * On test de bon timecode.
-     *
-     * @throws Exception
      */
     @Test
-    public void testTimecodeBon() throws Exception {
+    public void testTimecodeBon() {
         Timecode tc_1h_24 = new Timecode("01:00:00:00", Framerate.F24);
         assertEquals("01:00:00:00", tc_1h_24.toString(), "Le timecode n'est pas juste.");
         assertEquals(24D, tc_1h_24.getFramerate(), "Le framerate n'est pas juste.");
@@ -115,11 +114,9 @@ public final class TimecodeTest {
 
     /**
      * On test de bon timecode.
-     *
-     * @throws Exception
      */
     @Test
-    public void testTimecodeDropFrame() throws Exception {
+    public void testTimecodeDropFrame() {
         Timecode tc_2997 = new Timecode("00:00:00:00", Framerate.F2997);
         assertEquals("00:00:00;00", tc_2997.toString(), "Le timecode n'est pas juste.");
         assertEquals(29.97D, tc_2997.getFramerate(), "Le framerate n'est pas juste.");
@@ -228,10 +225,10 @@ public final class TimecodeTest {
     /**
      * On test des changements de framerate.
      *
-     * @throws Exception
+     * @throws TimecodeException
      */
     @Test
-    public void testChangemeFramerate() throws Exception {
+    public void testChangemeFramerate() throws TimecodeException {
         Timecode tc_1h_24 = new Timecode("01:00:00:00", Framerate.F24);
         assertEquals(86400, tc_1h_24.toImage(), "Le nombre d'image n'est pas juste.");
 

@@ -1,7 +1,7 @@
 package com.phenix.timecode;
 
-import com.phenix.timecode.exceptions.TimecodeException;
-import com.phenix.timecode.exceptions.TimecodeRuntimeException;
+import com.phenix.timecode.exception.TimecodeException;
+import com.phenix.timecode.exception.TimecodeRuntimeException;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.InputMismatchException;
@@ -144,9 +144,9 @@ public final class Timecode {
 
             sc.close();
         } catch (InputMismatchException exception) {
-            throw new TimecodeRuntimeException("Le timecode n'est pas correctement formaté : " + timecode);
+            throw new TimecodeRuntimeException("Le timecode n'est pas correctement formaté : " + timecode, exception);
         } catch (NoSuchElementException exception) {
-            throw new TimecodeRuntimeException("Le timecode n'est pas correctement formaté : " + timecode);
+            throw new TimecodeRuntimeException("Le timecode n'est pas correctement formaté : " + timecode, exception);
         }
     }
 

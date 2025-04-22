@@ -57,7 +57,7 @@ public enum Framerate {
     }
 
     /**
-     * Retourne un {@link Framerate} en fonction d'une valeur en {@code String}.
+     * Retourne un {@link Framerate} en fonction d'une valeur en {@link String}.
      *
      * @param value La valeur.
      * @return Soite le {@link Framerate} associé sinon {@code null}.
