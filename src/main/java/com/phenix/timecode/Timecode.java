@@ -628,16 +628,19 @@ public final class Timecode {
                             ok = false;
                         }
                     }
+
                     case 1 -> {
                         if (split_tc_nb >= 60) {
                             ok = false;
                         }
                     }
+
                     case 2 -> {
                         if (split_tc_nb >= 60) {
                             ok = false;
                         }
                     }
+
                     case 3 -> {
                         // On ne gère pas au dessus du 30 image seconde.
                         if (split_tc_nb >= framerate.getValeur()) {
