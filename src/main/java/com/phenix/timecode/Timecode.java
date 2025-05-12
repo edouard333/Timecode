@@ -47,7 +47,7 @@ public final class Timecode {
     /**
      * Si le framerate (29,97is) est en drop-frame ou non.
      */
-    private boolean drop_frame;
+    private boolean dropFrame;
 
     /**
      * Framerate du timecode.
@@ -57,31 +57,31 @@ public final class Timecode {
     /**
      * Nombre d'images (totale) du programme.
      */
-    private int nombre_image;
+    private int nombreImage;
 
     /**
      * Où commence le programme.<br>
      * Sert pour les conversions de timecode.
      */
-    private String timecode_debut = "00:00:00:00";
+    private String timecodeDebut = "00:00:00:00";
 
     /**
      * Si les informations de base ne sont pas définies.
      */
-    private String is_null;
+    private String isNull;
 
     /**
      * Si la valeur du timecode doit être calculé.<br>
      * Le seul a être calculé est pour quand on encode un nombre d'images.
      */
-    private boolean doit_etre_calcule = false;
+    private boolean doitEtreCalcule = false;
 
     /**
      * Construit un timecode "{@code null}".
      */
     public Timecode() {
-        this.is_null = "-1";
-        this.drop_frame = false;
+        this.isNull = "-1";
+        this.dropFrame = false;
     }
 
     /**
@@ -104,7 +104,7 @@ public final class Timecode {
      * @param framerate Le framerate du timecode.
      */
     public Timecode(@NotNull @NotBlank String timecode, @NotNull Framerate framerate) {
-        this(timecode, framerate.getValeur(), framerate.getDropFrame());
+        this(timecode, framerate.value, framerate.dropFrame);
     }
 
     /**
@@ -125,9 +125,9 @@ public final class Timecode {
      * @param timecode Le timecode sous forme de {@link String}
      * ("<em>HH:mm:ss:ii</em>").
      * @param framerate Le framerate du timecode.
-     * @param drop_frame Si le timecode est en drop-frame ou non.
+     * @param dropFrame Si le timecode est en drop-frame ou non.
      */
-    public Timecode(@NotNull @NotBlank String timecode, double framerate, boolean drop_frame) {
+    public Timecode(@NotNull @NotBlank String timecode, double framerate, boolean dropFrame) {
         try {
             Scanner sc = new Scanner(timecode);
             sc.useDelimiter(":");
@@ -138,9 +138,9 @@ public final class Timecode {
             this.image = sc.nextInt();
 
             this.framerate = framerate;
-            this.drop_frame = drop_frame;
+            this.dropFrame = dropFrame;
 
-            this.is_null = "";
+            this.isNull = "";
 
             sc.close();
         } catch (InputMismatchException exception) {
@@ -153,54 +153,54 @@ public final class Timecode {
     /**
      * Construit un timecode en fonction de sa durée en nombre d'images.
      *
-     * @param nombre_image Durée en nombre d'images.
+     * @param nombreImage Durée en nombre d'images.
      */
-    public Timecode(int nombre_image) {
-        this.nombre_image = nombre_image;
+    public Timecode(int nombreImage) {
+        this.nombreImage = nombreImage;
 
-        this.is_null = "";
-        this.doit_etre_calcule = true;
+        this.isNull = "";
+        this.doitEtreCalcule = true;
     }
 
     /**
      * Construit un timecode en fonction de sa durée en nombre d'images et d'un
      * framerate.
      *
-     * @param nombre_image Durée en nombre d'images.
+     * @param nombreImage Durée en nombre d'images.
      * @param framerate Framerate du timecode.
      */
-    public Timecode(int nombre_image, @NotNull Framerate framerate) {
-        this(nombre_image, framerate.getValeur(), framerate.getDropFrame());
+    public Timecode(int nombreImage, @NotNull Framerate framerate) {
+        this(nombreImage, framerate.value, framerate.dropFrame);
     }
 
     /**
      * Construit un timecode en fonction de sa durée en nombre d'images et d'un
      * framerate.
      *
-     * @param nombre_image Durée en nombre d'images.
+     * @param nombreImage Durée en nombre d'images.
      * @param framerate Framerate du timecode.
      */
-    public Timecode(int nombre_image, double framerate) {
-        this(nombre_image, framerate, false);
+    public Timecode(int nombreImage, double framerate) {
+        this(nombreImage, framerate, false);
     }
 
     /**
      * Construit un timecode en fonction de sa durée en nombre d'images et d'un
      * framerate.
      *
-     * @param nombre_image Durée en nombre d'images.
+     * @param nombreImage Durée en nombre d'images.
      * @param framerate Framerate du timecode.
-     * @param drop_frame {@code true} si c'est un timecode drop frame.
+     * @param dropFrame {@code true} si c'est un timecode drop frame.
      */
-    public Timecode(int nombre_image, double framerate, boolean drop_frame) {
-        this.nombre_image = nombre_image;
+    public Timecode(int nombreImage, double framerate, boolean dropFrame) {
+        this.nombreImage = nombreImage;
         this.framerate = framerate;
-        this.drop_frame = drop_frame;
+        this.dropFrame = dropFrame;
 
         this.nombreImageToInt();
 
-        this.is_null = "";
-        this.doit_etre_calcule = true;
+        this.isNull = "";
+        this.doitEtreCalcule = true;
     }
 
     /**
@@ -225,7 +225,7 @@ public final class Timecode {
      * @param framerate Le framerate.
      */
     public Timecode(int heure, int minute, int seconde, int image, @NotNull Framerate framerate) {
-        this(heure, minute, seconde, image, framerate.getValeur(), framerate.getDropFrame());
+        this(heure, minute, seconde, image, framerate.value, framerate.dropFrame);
     }
 
     /**
@@ -251,26 +251,26 @@ public final class Timecode {
      * @param seconde Seconde du timecode.
      * @param image Image du timecode.
      * @param framerate Framerate du timecode.
-     * @param drop_frame {@code true} si c'est un timecode drop frame.
+     * @param dropFrame {@code true} si c'est un timecode drop frame.
      */
-    public Timecode(int heure, int minute, int seconde, int image, double framerate, boolean drop_frame) {
+    public Timecode(int heure, int minute, int seconde, int image, double framerate, boolean dropFrame) {
         this.heure = heure;
         this.minute = minute;
         this.seconde = seconde;
         this.image = image;
         this.framerate = framerate;
-        this.drop_frame = drop_frame;
-        this.is_null = "";
+        this.dropFrame = dropFrame;
+        this.isNull = "";
     }
 
     /**
      * Ajoute un certain nombre d'images.
      *
-     * @param nombre_image Nombre d'images.
+     * @param nombreImage Nombre d'images.
      */
-    public void addFrame(int nombre_image) {
-        this.nombre_image = this.toImage() + nombre_image;
-        this.doit_etre_calcule = true;
+    public void addFrame(int nombreImage) {
+        this.nombreImage = this.toImage() + nombreImage;
+        this.doitEtreCalcule = true;
     }
 
     /**
@@ -283,7 +283,7 @@ public final class Timecode {
      * @throws TimecodeException Le timecode de début n'a pas été renseigné.
      */
     public void changeFramerate(Framerate framerate) throws TimecodeException {
-        this.changeFramerate(framerate.getValeur());
+        this.changeFramerate(framerate.value);
     }
 
     /**
@@ -296,14 +296,14 @@ public final class Timecode {
      * @throws TimecodeException Le timecode de début n'a pas été renseigné.
      */
     public void changeFramerate(double framerate) throws TimecodeException {
-        if (this.timecode_debut == null || this.timecode_debut.isBlank()) {
+        if (this.timecodeDebut == null || this.timecodeDebut.isBlank()) {
             throw new TimecodeException("Le timecode de début n'a pas été renseigné.");
         }
 
-        int image_utile = toImage() - new Timecode(this.timecode_debut, this.framerate).toImage();
+        int imageUtile = toImage() - new Timecode(this.timecodeDebut, this.framerate).toImage();
         this.framerate = framerate;
-        this.nombre_image = image_utile + new Timecode(this.timecode_debut, this.framerate).toImage();
-        this.doit_etre_calcule = true;
+        this.nombreImage = imageUtile + new Timecode(this.timecodeDebut, this.framerate).toImage();
+        this.doitEtreCalcule = true;
     }
 
     /**
@@ -326,39 +326,40 @@ public final class Timecode {
      * @return Timecode en 29,97 DF.
      */
     @NotNull
+    @NotBlank
     private String dropFrame() {
-        int nombre_image_tmp = (this.heure * 60 * 60 * 30) + (this.minute * 60 * 30) + (this.seconde * 30) + this.image;
+        int nombreImageTmp = (this.heure * 60 * 60 * 30) + (this.minute * 60 * 30) + (this.seconde * 30) + this.image;
 
-        int nombre_minute = (nombre_image_tmp / 1800) * 2;
+        int nombreMinute = (nombreImageTmp / 1800) * 2;
 
-        nombre_image_tmp += nombre_minute;
-        //System.out.println("nombre_minute (add) : " + nombre_minute);
+        nombreImageTmp += nombreMinute;
+        //System.out.println("nombreMinute (add) : " + nombreMinute);
 
-        int nombre_heure = (nombre_image_tmp / (1 * 60 * 60 * 30)) * 10;
-        //System.out.println("nombre_heure (sous) : " + nombre_heure);
-        nombre_image_tmp -= nombre_heure + (this.heure * 2);
+        int nombreHeure = (nombreImageTmp / (1 * 60 * 60 * 30)) * 10;
+        //System.out.println("nombreHeure (sous) : " + nombreHeure);
+        nombreImageTmp -= nombreHeure + (this.heure * 2);
 
-        int framerate_tmp = this.getFramerateCalcule();
+        int framerateTmp = this.getFramerateCalcule();
 
         // Heure :
-        int heure_tmp = nombre_image_tmp / (60 * 60 * framerate_tmp);
+        int heureTmp = nombreImageTmp / (60 * 60 * framerateTmp);
 
         // Minute :
-        int minute_image = nombre_image_tmp % (60 * 60 * framerate_tmp);
-        int minute_tmp = minute_image / (60 * framerate_tmp);
+        int minuteImage = nombreImageTmp % (60 * 60 * framerateTmp);
+        int minuteTmp = minuteImage / (60 * framerateTmp);
 
         // Seconde :
-        int seconde_image = minute_image % (60 * framerate_tmp);
-        int seconde_tmp = seconde_image / framerate_tmp;
+        int secondeImage = minuteImage % (60 * framerateTmp);
+        int secondeTmp = secondeImage / framerateTmp;
 
         // Image :
-        int image_tmp = seconde_image % framerate_tmp;
+        int imageTmp = secondeImage % framerateTmp;
 
-        if (seconde_tmp == 0 && image_tmp == 0 && (nombre_image_tmp != 0) && (heure_tmp + minute_tmp + seconde_tmp + image_tmp != heure_tmp)) {
-            image_tmp = 2;
+        if (secondeTmp == 0 && imageTmp == 0 && (nombreImageTmp != 0) && (heureTmp + minuteTmp + secondeTmp + imageTmp != heureTmp)) {
+            imageTmp = 2;
         }
 
-        return digit(heure_tmp) + ":" + digit(minute_tmp) + ":" + digit(seconde_tmp) + ";" + digit(image_tmp);
+        return digit(heureTmp) + ":" + digit(minuteTmp) + ":" + digit(secondeTmp) + ";" + digit(imageTmp);
     }
 
     /**
@@ -374,24 +375,24 @@ public final class Timecode {
     /**
      * Retourne si le timecode est dans l'interval des timecodes in et out.
      *
-     * @param tc_in Timecode in.
-     * @param tc_out Timecode out.
+     * @param tcIn Timecode in.
+     * @param tcOut Timecode out.
      * @return {@code true} si le timecode est dans l'interval.
      */
-    public boolean entre(Timecode tc_in, Timecode tc_out) {
-        return entre(this, tc_in, tc_out);
+    public boolean entre(Timecode tcIn, Timecode tcOut) {
+        return entre(this, tcIn, tcOut);
     }
 
     /**
      * Retourne si le timecode est dans l'interval des timecodes in et out
      *
      * @param tc Le timecode à vérifier.
-     * @param tc_in Timecode in.
-     * @param tc_out Timecode out.
+     * @param tcIn Timecode in.
+     * @param tcOut Timecode out.
      * @return {@code true} si le timecode est dans l'interval.
      */
-    public static boolean entre(@NotNull Timecode tc, @NotNull Timecode tc_in, @NotNull Timecode tc_out) {
-        return (tc_in.toImage() <= tc.toImage() && tc.toImage() <= tc_out.toImage());
+    public static boolean entre(@NotNull Timecode tc, @NotNull Timecode tcIn, @NotNull Timecode tcOut) {
+        return (tcIn.toImage() <= tc.toImage() && tc.toImage() <= tcOut.toImage());
     }
 
     /**
@@ -400,14 +401,14 @@ public final class Timecode {
      * @return Timecode en 29,97 DF.
      */
     private int compenserDropFrame() {
-        int nombre_image_tmp = (this.heure * 60 * 60 * 30) + (this.minute * 60 * 30) + (this.seconde * 30) + this.image;
+        int nombreImageTmp = (this.heure * 60 * 60 * 30) + (this.minute * 60 * 30) + (this.seconde * 30) + this.image;
 
-        int compensation = (nombre_image_tmp / 1800) * 2;
+        int compensation = (nombreImageTmp / 1800) * 2;
 
-        int nombre_heure = (nombre_image_tmp / (1 * 60 * 60 * 30)) * 10;
+        int nombreHeure = (nombreImageTmp / (1 * 60 * 60 * 30)) * 10;
 
-        if (nombre_heure > 0) {
-            compensation -= nombre_heure + (this.heure * 2);
+        if (nombreHeure > 0) {
+            compensation -= nombreHeure + (this.heure * 2);
         }
 
         return compensation;
@@ -429,16 +430,16 @@ public final class Timecode {
      */
     private int getFramerateCalcule() {
         // Si c'est du 23,976 i/s :
-        if (this.framerate == Framerate.F23976.getValeur()) {
+        if (this.framerate == Framerate.F23976.value) {
             return 24;
         } // Si c'est du 24 i/s :
-        else if (this.framerate == Framerate.F24.getValeur()) {
+        else if (this.framerate == Framerate.F24.value) {
             return 24;
         } // Si c'est du 25 i/s :
-        else if (this.framerate == Framerate.F25.getValeur()) {
+        else if (this.framerate == Framerate.F25.value) {
             return 25;
         } // Si c'est du 29,97 i/s NDF, 29,76 DF ou du 30 i/s :
-        else if (this.framerate == Framerate.F2997.getValeur() || this.framerate == Framerate.F2997ND.getValeur() || this.framerate == Framerate.F30.getValeur()) {
+        else if (this.framerate == Framerate.F2997.value || this.framerate == Framerate.F2997ND.value || this.framerate == Framerate.F30.value) {
             return 30;
         } // Sinon, on tente une conversion en int :
         else {
@@ -452,7 +453,7 @@ public final class Timecode {
      * @return Timecode de début.
      */
     public String getStartTimecode() {
-        return this.timecode_debut;
+        return this.timecodeDebut;
     }
 
     /**
@@ -461,7 +462,7 @@ public final class Timecode {
      * @return {@code true} si c'est drop-frame, sinon {@code false}.
      */
     public boolean isDropFrame() {
-        return this.drop_frame;
+        return this.dropFrame;
     }
 
     /**
@@ -475,33 +476,33 @@ public final class Timecode {
     }
 
     /**
-     * Encode la variable nombre_image en heure, minute, seconde, image.
+     * Encode la variable nombreImage en heure, minute, seconde, image.
      */
     private void nombreImageToInt() {
-        int framerate_tmp = this.getFramerateCalcule();
+        int framerateTmp = this.getFramerateCalcule();
 
         // Heure :
-        this.heure = this.nombre_image / (60 * 60 * framerate_tmp);
+        this.heure = this.nombreImage / (60 * 60 * framerateTmp);
 
         // Minute :
-        int minute_image = this.nombre_image % (60 * 60 * framerate_tmp);
-        this.minute = minute_image / (60 * framerate_tmp);
+        int minuteImage = this.nombreImage % (60 * 60 * framerateTmp);
+        this.minute = minuteImage / (60 * framerateTmp);
 
         // Seconde :
-        int seconde_image = minute_image % (60 * framerate_tmp);
-        this.seconde = seconde_image / framerate_tmp;
+        int secondeImage = minuteImage % (60 * framerateTmp);
+        this.seconde = secondeImage / framerateTmp;
 
         // Image :
-        this.image = seconde_image % framerate_tmp;
+        this.image = secondeImage % framerateTmp;
     }
 
     /**
      * Modifie si le timecode est drop-frame ou non.
      *
-     * @param drop_frame La valeur du drop-frame.
+     * @param dropFrame La valeur du drop-frame.
      */
-    public void setDropFrame(boolean drop_frame) {
-        this.drop_frame = drop_frame;
+    public void setDropFrame(boolean dropFrame) {
+        this.dropFrame = dropFrame;
     }
 
     /**
@@ -518,10 +519,10 @@ public final class Timecode {
     /**
      * Définit le timecode de début.
      *
-     * @param timecode_debut Nombre d'images.
+     * @param timecodeDebut Nombre d'images.
      */
-    public void setStartTimecode(String timecode_debut) {
-        this.timecode_debut = timecode_debut;
+    public void setStartTimecode(String timecodeDebut) {
+        this.timecodeDebut = timecodeDebut;
     }
 
     /**
@@ -537,20 +538,20 @@ public final class Timecode {
     /**
      * Retourne la représentation en nombre d'images.
      *
-     * @param image_utile Si {@code true} alors le nombre d'images en tenant
+     * @param imageUtile Si {@code true} alors le nombre d'images en tenant
      * compte que des images utiles.<br>
      * Doit définir le timecode début via {@link #setStartTimecode(String)}.
      * @return Le nombre d'images que représente le timecode.
      */
-    public int toImage(boolean image_utile) {
-        if (this.doit_etre_calcule) {
+    public int toImage(boolean imageUtile) {
+        if (this.doitEtreCalcule) {
             this.nombreImageToInt();
-            this.doit_etre_calcule = false;
+            this.doitEtreCalcule = false;
         }
 
-        if (this.is_null.isBlank()) {
+        if (this.isNull.isBlank()) {
             return (this.heure * 60 * 60 * this.getFramerateCalcule()) + (this.minute * 60 * this.getFramerateCalcule()) + (this.seconde * this.getFramerateCalcule()) + (this.image)
-                    - ((image_utile) ? new Timecode(this.timecode_debut, this.framerate).toImage() : 0) - (this.drop_frame ? compenserDropFrame() : 0);
+                    - ((imageUtile) ? new Timecode(this.timecodeDebut, this.framerate).toImage() : 0) - (this.dropFrame ? compenserDropFrame() : 0);
         } else {
             return -1;
         }
@@ -561,16 +562,17 @@ public final class Timecode {
      *
      * @return Le timecode en {@link String}.
      */
-    @Override
     @NotNull
+    @NotBlank
+    @Override
     public String toString() {
-        if (this.doit_etre_calcule) {
+        if (this.doitEtreCalcule) {
             this.nombreImageToInt();
-            this.doit_etre_calcule = false;
+            this.doitEtreCalcule = false;
         }
 
-        if (this.is_null.isBlank()) {
-            if (this.drop_frame) {
+        if (this.isNull.isBlank()) {
+            if (this.dropFrame) {
                 return this.dropFrame();
             } else {
                 return digit(this.heure) + ":" + digit(this.minute) + ":" + digit(this.seconde) + ":" + digit(this.image);
@@ -603,47 +605,47 @@ public final class Timecode {
 
             tc = tc.replace(";", ":");
 
-            String[] split_tc = tc.split(":");
+            String[] splitTc = tc.split(":");
 
-            if (split_tc.length != 4) {
+            if (splitTc.length != 4) {
                 ok = false;
             }
 
-            int split_tc_nb;
+            int splitTcNb;
 
-            for (int i = 0; i < split_tc.length; i++) {
-                if (split_tc[i].length() != 2) {
+            for (int i = 0; i < splitTc.length; i++) {
+                if (splitTc[i].length() != 2) {
                     ok = false;
                 }
 
-                split_tc_nb = Integer.parseInt(split_tc[i]);
+                splitTcNb = Integer.parseInt(splitTc[i]);
 
-                if (split_tc_nb < 0) {
+                if (splitTcNb < 0) {
                     ok = false;
                 }
 
                 switch (i) {
                     case 0 -> {
-                        if (split_tc_nb > 24) {
+                        if (splitTcNb > 24) {
                             ok = false;
                         }
                     }
 
                     case 1 -> {
-                        if (split_tc_nb >= 60) {
+                        if (splitTcNb >= 60) {
                             ok = false;
                         }
                     }
 
                     case 2 -> {
-                        if (split_tc_nb >= 60) {
+                        if (splitTcNb >= 60) {
                             ok = false;
                         }
                     }
 
                     case 3 -> {
                         // On ne gère pas au dessus du 30 image seconde.
-                        if (split_tc_nb >= framerate.getValeur()) {
+                        if (splitTcNb >= framerate.value) {
                             ok = false;
                         }
                     }

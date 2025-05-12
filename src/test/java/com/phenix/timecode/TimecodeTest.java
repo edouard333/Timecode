@@ -64,17 +64,17 @@ public final class TimecodeTest {
         assertEquals("-1", tc.toString(), "Quand il n'y a pas de timecode, cela doit retourner '-1'.");
         //System.out.println("tc : " + tc.toString());
 
-        TimecodeRuntimeException exception_input = assertThrows(TimecodeRuntimeException.class, () -> {
+        TimecodeRuntimeException exceptionInput = assertThrows(TimecodeRuntimeException.class, () -> {
             Timecode tc2 = new Timecode("00:00:00");
         });
 
-        assertNotNull(exception_input.getMessage(), "Le message d'erreur ne peut pas être null.");
+        assertNotNull(exceptionInput.getMessage(), "Le message d'erreur ne peut pas être null.");
 
-        TimecodeRuntimeException exception_format = assertThrows(TimecodeRuntimeException.class, () -> {
+        TimecodeRuntimeException exceptionFormat = assertThrows(TimecodeRuntimeException.class, () -> {
             Timecode tc3 = new Timecode("null");
         });
 
-        assertNotNull(exception_format.getMessage(), "Le message d'erreur ne peut pas être null.");
+        assertNotNull(exceptionFormat.getMessage(), "Le message d'erreur ne peut pas être null.");
     }
 
     /**
@@ -82,34 +82,34 @@ public final class TimecodeTest {
      */
     @Test
     public void testTimecodeBon() {
-        Timecode tc_1h_24 = new Timecode("01:00:00:00", Framerate.F24);
-        assertEquals("01:00:00:00", tc_1h_24.toString(), "Le timecode n'est pas juste.");
-        assertEquals(24D, tc_1h_24.getFramerate(), "Le framerate n'est pas juste.");
-        assertEquals(86400, tc_1h_24.toImage(), "Le nombre d'image n'est pas juste.");
+        Timecode tc1h24 = new Timecode("01:00:00:00", Framerate.F24);
+        assertEquals("01:00:00:00", tc1h24.toString(), "Le timecode n'est pas juste.");
+        assertEquals(24D, tc1h24.getFramerate(), "Le framerate n'est pas juste.");
+        assertEquals(86400, tc1h24.toImage(), "Le nombre d'image n'est pas juste.");
 
-        Timecode tc_1h_25 = new Timecode("01:00:00:00", Framerate.F25);
-        assertEquals("01:00:00:00", tc_1h_25.toString(), "Le timecode n'est pas juste.");
-        assertEquals(25D, tc_1h_25.getFramerate(), "Le framerate n'est pas juste.");
-        assertEquals(90000, tc_1h_25.toImage(), "Le nombre d'image n'est pas juste.");
+        Timecode tc1h25 = new Timecode("01:00:00:00", Framerate.F25);
+        assertEquals("01:00:00:00", tc1h25.toString(), "Le timecode n'est pas juste.");
+        assertEquals(25D, tc1h25.getFramerate(), "Le framerate n'est pas juste.");
+        assertEquals(90000, tc1h25.toImage(), "Le nombre d'image n'est pas juste.");
 
-        Timecode tc_1h_30 = new Timecode("01:00:00:00", Framerate.F30);
-        assertEquals("01:00:00:00", tc_1h_30.toString(), "Le timecode n'est pas juste.");
-        assertEquals(30D, tc_1h_30.getFramerate(), "Le framerate n'est pas juste.");
-        assertEquals(108000, tc_1h_30.toImage(), "Le nombre d'image n'est pas juste.");
+        Timecode tc1h30 = new Timecode("01:00:00:00", Framerate.F30);
+        assertEquals("01:00:00:00", tc1h30.toString(), "Le timecode n'est pas juste.");
+        assertEquals(30D, tc1h30.getFramerate(), "Le framerate n'est pas juste.");
+        assertEquals(108000, tc1h30.toImage(), "Le nombre d'image n'est pas juste.");
 
-        Timecode tc_1h_2398 = new Timecode("01:00:00:00", Framerate.F23976);
-        assertEquals("01:00:00:00", tc_1h_2398.toString(), "Le timecode n'est pas juste.");
-        assertEquals(23.976D, tc_1h_2398.getFramerate(), "Le framerate n'est pas juste.");
-        assertEquals(86400, tc_1h_2398.toImage(), "Le nombre d'image n'est pas juste.");
+        Timecode tc1h2398 = new Timecode("01:00:00:00", Framerate.F23976);
+        assertEquals("01:00:00:00", tc1h2398.toString(), "Le timecode n'est pas juste.");
+        assertEquals(23.976D, tc1h2398.getFramerate(), "Le framerate n'est pas juste.");
+        assertEquals(86400, tc1h2398.toImage(), "Le nombre d'image n'est pas juste.");
 
-        Timecode tc_2398 = new Timecode("03:00:42:13", Framerate.F23976);
-        assertEquals(260221, tc_2398.toImage(), "Le nombre d'image n'est pas juste.");
+        Timecode tc2398 = new Timecode("03:00:42:13", Framerate.F23976);
+        assertEquals(260221, tc2398.toImage(), "Le nombre d'image n'est pas juste.");
 
-        Timecode tc_1h_2997nd = new Timecode("01:00:00:00", Framerate.F2997ND);
-        assertEquals("01:00:00:00", tc_1h_2997nd.toString(), "Le timecode n'est pas juste.");
-        assertEquals(29.97D, tc_1h_2997nd.getFramerate(), "Le framerate n'est pas juste.");
-        assertFalse(tc_1h_2997nd.isDropFrame(), "Cela ne doit pas être drop-frame.");
-        assertEquals(108000, tc_1h_2997nd.toImage(), "Le nombre d'image n'est pas juste.");
+        Timecode tc1h2997nd = new Timecode("01:00:00:00", Framerate.F2997ND);
+        assertEquals("01:00:00:00", tc1h2997nd.toString(), "Le timecode n'est pas juste.");
+        assertEquals(29.97D, tc1h2997nd.getFramerate(), "Le framerate n'est pas juste.");
+        assertFalse(tc1h2997nd.isDropFrame(), "Cela ne doit pas être drop-frame.");
+        assertEquals(108000, tc1h2997nd.toImage(), "Le nombre d'image n'est pas juste.");
     }
 
     /**
@@ -117,77 +117,77 @@ public final class TimecodeTest {
      */
     @Test
     public void testTimecodeDropFrame() {
-        Timecode tc_2997 = new Timecode("00:00:00:00", Framerate.F2997);
-        assertEquals("00:00:00;00", tc_2997.toString(), "Le timecode n'est pas juste.");
-        assertEquals(29.97D, tc_2997.getFramerate(), "Le framerate n'est pas juste.");
-        assertTrue(tc_2997.isDropFrame(), "Cela doit être drop-frame.");
-        assertEquals(0, tc_2997.toImage(), "Le nombre d'image n'est pas juste.");
+        Timecode tc2997 = new Timecode("00:00:00:00", Framerate.F2997);
+        assertEquals("00:00:00;00", tc2997.toString(), "Le timecode n'est pas juste.");
+        assertEquals(29.97D, tc2997.getFramerate(), "Le framerate n'est pas juste.");
+        assertTrue(tc2997.isDropFrame(), "Cela doit être drop-frame.");
+        assertEquals(0, tc2997.toImage(), "Le nombre d'image n'est pas juste.");
 
         // 1min :
-        tc_2997 = new Timecode("00:00:59:29", Framerate.F2997);
-        assertEquals(1799, tc_2997.toImage(), "Le nombre d'image n'est pas juste.");
+        tc2997 = new Timecode("00:00:59:29", Framerate.F2997);
+        assertEquals(1799, tc2997.toImage(), "Le nombre d'image n'est pas juste.");
 
-        tc_2997 = new Timecode(1799, Framerate.F2997);
-        assertEquals("00:00:59;29", tc_2997.toString(), "Le timecode n'est pas juste.");
+        tc2997 = new Timecode(1799, Framerate.F2997);
+        assertEquals("00:00:59;29", tc2997.toString(), "Le timecode n'est pas juste.");
 
-        tc_2997 = new Timecode("00:01:00:02", Framerate.F2997);
-        assertEquals(1800, tc_2997.toImage(), "Le nombre d'image n'est pas juste.");
+        tc2997 = new Timecode("00:01:00:02", Framerate.F2997);
+        assertEquals(1800, tc2997.toImage(), "Le nombre d'image n'est pas juste.");
 
-        tc_2997 = new Timecode(1800, Framerate.F2997);
-        assertEquals("00:01:00;02", tc_2997.toString(), "Le timecode n'est pas juste.");
+        tc2997 = new Timecode(1800, Framerate.F2997);
+        assertEquals("00:01:00;02", tc2997.toString(), "Le timecode n'est pas juste.");
 
         // 2min :
-        tc_2997 = new Timecode("00:01:59:29", Framerate.F2997);
-        assertEquals(3597, tc_2997.toImage(), "Le nombre d'image n'est pas juste.");
+        tc2997 = new Timecode("00:01:59:29", Framerate.F2997);
+        assertEquals(3597, tc2997.toImage(), "Le nombre d'image n'est pas juste.");
 
-        tc_2997 = new Timecode(3597, Framerate.F2997);
-        assertEquals("00:01:59;29", tc_2997.toString(), "Le timecode n'est pas juste.");
+        tc2997 = new Timecode(3597, Framerate.F2997);
+        assertEquals("00:01:59;29", tc2997.toString(), "Le timecode n'est pas juste.");
 
-        tc_2997 = new Timecode("00:02:00:02", Framerate.F2997);
-        assertEquals(3598, tc_2997.toImage(), "Le nombre d'image n'est pas juste.");
+        tc2997 = new Timecode("00:02:00:02", Framerate.F2997);
+        assertEquals(3598, tc2997.toImage(), "Le nombre d'image n'est pas juste.");
 
-        tc_2997 = new Timecode(3598, Framerate.F2997);
-        assertEquals("00:02:00;02", tc_2997.toString(), "Le timecode n'est pas juste.");
+        tc2997 = new Timecode(3598, Framerate.F2997);
+        assertEquals("00:02:00;02", tc2997.toString(), "Le timecode n'est pas juste.");
 
         // 3min :
-        tc_2997 = new Timecode("00:02:59:29", Framerate.F2997);
-        assertEquals(5395, tc_2997.toImage(), "Le nombre d'image n'est pas juste.");
+        tc2997 = new Timecode("00:02:59:29", Framerate.F2997);
+        assertEquals(5395, tc2997.toImage(), "Le nombre d'image n'est pas juste.");
 
-        tc_2997 = new Timecode(5395, Framerate.F2997);
-        assertEquals("00:02:59;29", tc_2997.toString(), "Le timecode n'est pas juste.");
+        tc2997 = new Timecode(5395, Framerate.F2997);
+        assertEquals("00:02:59;29", tc2997.toString(), "Le timecode n'est pas juste.");
 
-        tc_2997 = new Timecode("00:03:00:02", Framerate.F2997);
-        assertEquals(5396, tc_2997.toImage(), "Le nombre d'image n'est pas juste.");
+        tc2997 = new Timecode("00:03:00:02", Framerate.F2997);
+        assertEquals(5396, tc2997.toImage(), "Le nombre d'image n'est pas juste.");
 
-        tc_2997 = new Timecode(5396, Framerate.F2997);
-        assertEquals("00:03:00;02", tc_2997.toString(), "Le timecode n'est pas juste.");
+        tc2997 = new Timecode(5396, Framerate.F2997);
+        assertEquals("00:03:00;02", tc2997.toString(), "Le timecode n'est pas juste.");
 
         // 5min :
-        tc_2997 = new Timecode("00:04:59:29", Framerate.F2997);
-        assertEquals(8991, tc_2997.toImage(), "Le nombre d'image n'est pas juste.");
+        tc2997 = new Timecode("00:04:59:29", Framerate.F2997);
+        assertEquals(8991, tc2997.toImage(), "Le nombre d'image n'est pas juste.");
 
-        tc_2997 = new Timecode(8991, Framerate.F2997);
-        assertEquals("00:04:59;29", tc_2997.toString(), "Le timecode n'est pas juste.");
+        tc2997 = new Timecode(8991, Framerate.F2997);
+        assertEquals("00:04:59;29", tc2997.toString(), "Le timecode n'est pas juste.");
 
-        tc_2997 = new Timecode("00:05:00:02", Framerate.F2997);
-        assertEquals(8992, tc_2997.toImage(), "Le nombre d'image n'est pas juste.");
+        tc2997 = new Timecode("00:05:00:02", Framerate.F2997);
+        assertEquals(8992, tc2997.toImage(), "Le nombre d'image n'est pas juste.");
 
-        tc_2997 = new Timecode(8992, Framerate.F2997);
-        assertEquals("00:05:00;02", tc_2997.toString(), "Le timecode n'est pas juste.");
+        tc2997 = new Timecode(8992, Framerate.F2997);
+        assertEquals("00:05:00;02", tc2997.toString(), "Le timecode n'est pas juste.");
 
         // 1h :
-        tc_2997 = new Timecode("01:00:00:00", Framerate.F2997);
-        assertEquals(107892, tc_2997.toImage(), "Le nombre d'image n'est pas juste.");
+        tc2997 = new Timecode("01:00:00:00", Framerate.F2997);
+        assertEquals(107892, tc2997.toImage(), "Le nombre d'image n'est pas juste.");
 
-        tc_2997 = new Timecode(107892, Framerate.F2997);
-        assertEquals("01:00:00;00", tc_2997.toString(), "Le timecode n'est pas juste.");
+        tc2997 = new Timecode(107892, Framerate.F2997);
+        assertEquals("01:00:00;00", tc2997.toString(), "Le timecode n'est pas juste.");
 
         // 2h :
-        tc_2997 = new Timecode("02:00:00:00", Framerate.F2997);
-        assertEquals(215784, tc_2997.toImage(), "Le nombre d'image n'est pas juste.");
+        tc2997 = new Timecode("02:00:00:00", Framerate.F2997);
+        assertEquals(215784, tc2997.toImage(), "Le nombre d'image n'est pas juste.");
 
-        tc_2997 = new Timecode(215784, Framerate.F2997);
-        assertEquals("02:00:00;00", tc_2997.toString(), "Le timecode n'est pas juste.");
+        tc2997 = new Timecode(215784, Framerate.F2997);
+        assertEquals("02:00:00;00", tc2997.toString(), "Le timecode n'est pas juste.");
     }
 
     /**
@@ -195,29 +195,29 @@ public final class TimecodeTest {
      */
     @Test
     public void testDropFrame() {
-        Timecode from_image;
-        Timecode from_smpte;
+        Timecode fromImage;
+        Timecode fromSmpte;
 
         for (int i = 0; i < /*24 **/ 60 * 60 * 30; i++) {
-            from_image = new Timecode(i, Framerate.F2997);
-            from_smpte = new Timecode(from_image.toString().replace(";", ":"), Framerate.F2997);
+            fromImage = new Timecode(i, Framerate.F2997);
+            fromSmpte = new Timecode(fromImage.toString().replace(";", ":"), Framerate.F2997);
 
             boolean erreur = false;
 
             // En nombre d'image:
-            if (i != from_image.toImage() || i != from_smpte.toImage()) {
+            if (i != fromImage.toImage() || i != fromSmpte.toImage()) {
                 //System.out.println("Erreur (toImage) : " + i);
                 erreur = true;
             }
 
             // En format SMPTE :
-            if (!from_image.toString().equals(from_smpte.toString())) {
+            if (!fromImage.toString().equals(fromSmpte.toString())) {
                 //System.out.println("Erreur (toString) : " + i);
                 erreur = true;
             }
 
             if (erreur) {
-                //System.out.println(i + " -> TC " + from_image.toImage() + " / " + from_image.toString() + " -> " + from_smpte.toImage() + " / " + from_smpte.toString());
+                //System.out.println(i + " -> TC " + fromImage.toImage() + " / " + fromImage.toString() + " -> " + fromSmpte.toImage() + " / " + fromSmpte.toString());
             }
         }
     }
@@ -229,25 +229,25 @@ public final class TimecodeTest {
      */
     @Test
     public void testChangemeFramerate() throws TimecodeException {
-        Timecode tc_1h_24 = new Timecode("01:00:00:00", Framerate.F24);
-        assertEquals(86400, tc_1h_24.toImage(), "Le nombre d'image n'est pas juste.");
+        Timecode tc1h24 = new Timecode("01:00:00:00", Framerate.F24);
+        assertEquals(86400, tc1h24.toImage(), "Le nombre d'image n'est pas juste.");
 
-        Exception exception_start_tc = assertThrows(Exception.class, () -> {
-            tc_1h_24.setStartTimecode(null);
-            tc_1h_24.changeFramerate(25D);
+        Exception exceptionStartTc = assertThrows(Exception.class, () -> {
+            tc1h24.setStartTimecode(null);
+            tc1h24.changeFramerate(25D);
         }, "L'erreur ne s'est pas lancée.");
-        assertNotNull(exception_start_tc.getMessage(), "Le message d'erreur ne peut pas être null.");
+        assertNotNull(exceptionStartTc.getMessage(), "Le message d'erreur ne peut pas être null.");
 
-        tc_1h_24.setStartTimecode("00:00:00:00");
-        tc_1h_24.changeFramerate(25D);
+        tc1h24.setStartTimecode("00:00:00:00");
+        tc1h24.changeFramerate(25D);
 
-        assertEquals(86400, tc_1h_24.toImage(), "Le nombre d'image n'est pas juste.");
-        assertEquals("00:57:36:00", tc_1h_24.toString(), "Le timecode n'est pas juste.");
+        assertEquals(86400, tc1h24.toImage(), "Le nombre d'image n'est pas juste.");
+        assertEquals("00:57:36:00", tc1h24.toString(), "Le timecode n'est pas juste.");
 
-        Timecode tc_1h_25 = new Timecode("01:00:00:00", Framerate.F25);
-        assertEquals(90000, tc_1h_25.toImage(), "Le nombre d'image n'est pas juste.");
-        tc_1h_25.changeFramerate(24D);
-        assertEquals(90000, tc_1h_25.toImage(), "Le nombre d'image n'est pas juste.");
-        assertEquals("01:02:30:00", tc_1h_25.toString(), "Le timecode n'est pas juste.");
+        Timecode tc1h25 = new Timecode("01:00:00:00", Framerate.F25);
+        assertEquals(90000, tc1h25.toImage(), "Le nombre d'image n'est pas juste.");
+        tc1h25.changeFramerate(24D);
+        assertEquals(90000, tc1h25.toImage(), "Le nombre d'image n'est pas juste.");
+        assertEquals("01:02:30:00", tc1h25.toString(), "Le timecode n'est pas juste.");
     }
 }

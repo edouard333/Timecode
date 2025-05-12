@@ -14,33 +14,33 @@ public final class IntervalTimecode {
      * Timecode in.
      */
     @NotNull
-    private Timecode tc_in;
+    private Timecode tcIn;
 
     /**
      * Timecode out.
      */
     @NotNull
-    private Timecode tc_out;
+    private Timecode tcOut;
 
     /**
      *
-     * @param tc_in Timecode in.
-     * @param tc_out Timecode out.
+     * @param tcIn Timecode in.
+     * @param tcOut Timecode out.
      * @param framerate Le framerate des deux timecodes.
      */
-    public IntervalTimecode(@NotNull @NotBlank String tc_in, @NotNull @NotBlank String tc_out, Framerate framerate) {
-        this.tc_in = new Timecode(tc_in, framerate);
-        this.tc_out = new Timecode(tc_out, framerate);
+    public IntervalTimecode(@NotNull @NotBlank String tcIn, @NotNull @NotBlank String tcOut, Framerate framerate) {
+        this.tcIn = new Timecode(tcIn, framerate);
+        this.tcOut = new Timecode(tcOut, framerate);
     }
 
     /**
      *
-     * @param tc_in Timecode in.
-     * @param tc_out Timecode out.
+     * @param tcIn Timecode in.
+     * @param tcOut Timecode out.
      */
-    public IntervalTimecode(@NotNull Timecode tc_in, @NotNull Timecode tc_out) {
-        this.tc_in = tc_in;
-        this.tc_out = tc_out;
+    public IntervalTimecode(@NotNull Timecode tcIn, @NotNull Timecode tcOut) {
+        this.tcIn = tcIn;
+        this.tcOut = tcOut;
     }
 
     /**
@@ -49,7 +49,7 @@ public final class IntervalTimecode {
      * @return
      */
     public boolean dedans(@NotNull @NotBlank String tc) {
-        return this.dedans(new Timecode(tc, this.tc_in.getFramerate()));
+        return this.dedans(new Timecode(tc, this.tcIn.getFramerate()));
     }
 
     /**
@@ -58,7 +58,7 @@ public final class IntervalTimecode {
      * @return
      */
     public boolean dedans(@NotNull @NotBlank Timecode tc) {
-        return tc.entre(this.tc_in, this.tc_out);
+        return tc.entre(this.tcIn, this.tcOut);
     }
 
     /**
@@ -67,7 +67,7 @@ public final class IntervalTimecode {
      */
     @NotNull
     public Timecode getTimecodeIn() {
-        return this.tc_in;
+        return this.tcIn;
     }
 
     /**
@@ -76,24 +76,24 @@ public final class IntervalTimecode {
      */
     @NotNull
     public Timecode getTimecodeOut() {
-        return this.tc_out;
+        return this.tcOut;
     }
 
     /**
      * Définit le timecode in.
      *
-     * @param tc_in Timecode in.
+     * @param tcIn Timecode in.
      */
-    public void setTimecodeIn(@NotNull Timecode tc_in) {
-        this.tc_in = tc_in;
+    public void setTimecodeIn(@NotNull Timecode tcIn) {
+        this.tcIn = tcIn;
     }
 
     /**
      * Définit le timecode out.
      *
-     * @param tc_out Timecode out.
+     * @param tcOut Timecode out.
      */
-    public void setTimecodeOut(@NotNull Timecode tc_out) {
-        this.tc_out = tc_out;
+    public void setTimecodeOut(@NotNull Timecode tcOut) {
+        this.tcOut = tcOut;
     }
 }

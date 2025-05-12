@@ -1,5 +1,6 @@
 package com.phenix.timecode;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 
@@ -38,22 +39,22 @@ public enum Framerate {
     /**
      * Valeur à utiliser.
      */
-    private final double framerate;
+    public final double value;
 
     /**
      * Si drop frame ou non.
      */
-    private final boolean drop_frame;
+    public final boolean dropFrame;
 
     /**
      * Définit un frame rate.
      *
-     * @param framerate Le framerate.
-     * @param drop_frame Si on est en dropframe ou non.
+     * @param value Le framerate.
+     * @param dropFrame Si on est en dropframe ou non.
      */
-    private Framerate(double framerate, boolean drop_frame) {
-        this.framerate = framerate;
-        this.drop_frame = drop_frame;
+    private Framerate(double value, boolean dropFrame) {
+        this.value = value;
+        this.dropFrame = dropFrame;
     }
 
     /**
@@ -64,10 +65,10 @@ public enum Framerate {
      */
     @Null
     public static Framerate fromValue(@NotNull String value) {
-        double value_d = Double.parseDouble(value);
+        double valueD = Double.parseDouble(value);
 
         for (Framerate framerate : values()) {
-            if (framerate.framerate == value_d) {
+            if (framerate.value == valueD) {
                 return framerate;
             }
         }
@@ -84,29 +85,11 @@ public enum Framerate {
     @Null
     public static Framerate fromValue(double value) {
         for (Framerate framerate : values()) {
-            if (framerate.framerate == value) {
+            if (framerate.value == value) {
                 return framerate;
             }
         }
 
         return null;
-    }
-
-    /**
-     * Retourne le framerate.
-     *
-     * @return Le framerate.
-     */
-    public double getValeur() {
-        return this.framerate;
-    }
-
-    /**
-     * Retourne si le framerate est en dropframe ou non.
-     *
-     * @return Le dropframe.
-     */
-    public boolean getDropFrame() {
-        return this.drop_frame;
     }
 }
