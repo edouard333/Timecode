@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 public final class TimecodeTest {
 
     /**
-     *
+     * Lance les tests.
      */
     public TimecodeTest() {
     }
