@@ -331,12 +331,9 @@ public final class Timecode {
         int nombreImageTmp = (this.heure * 60 * 60 * 30) + (this.minute * 60 * 30) + (this.seconde * 30) + this.image;
 
         int nombreMinute = (nombreImageTmp / 1800) * 2;
-
         nombreImageTmp += nombreMinute;
-        //System.out.println("nombreMinute (add) : " + nombreMinute);
 
         int nombreHeure = (nombreImageTmp / (1 * 60 * 60 * 30)) * 10;
-        //System.out.println("nombreHeure (sous) : " + nombreHeure);
         nombreImageTmp -= nombreHeure + (this.heure * 2);
 
         int framerateTmp = this.getFramerateCalcule();
@@ -611,14 +608,12 @@ public final class Timecode {
                 ok = false;
             }
 
-            int splitTcNb;
-
             for (int i = 0; i < splitTc.length; i++) {
                 if (splitTc[i].length() != 2) {
                     ok = false;
                 }
 
-                splitTcNb = Integer.parseInt(splitTc[i]);
+                int splitTcNb = Integer.parseInt(splitTc[i]);
 
                 if (splitTcNb < 0) {
                     ok = false;

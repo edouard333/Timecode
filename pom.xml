@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.phenix</groupId>
     <artifactId>timecode</artifactId>
-    <version>0.8.3</version>
+    <version>0.8.4</version>
     <packaging>jar</packaging>
     
     <name>Timecode</name>
@@ -24,7 +24,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>3.6.2</version>
                 <executions>
                     <execution>
                         <id>enforce-files-exist</id>
@@ -33,12 +33,36 @@
                         </goals>
                         <configuration>
                             <rules>
+                                <!-- Vérifie qu'on utilise la bonne version de JDK. -->
+                                <requireJavaVersion>
+                                    <version>25</version>
+                                </requireJavaVersion>
+                                <!-- Vérifie qu'est indiqué le mode d'encodage des sources. -->
+                                <requireProperty>
+                                    <property>project.build.sourceEncoding</property>
+                                    <regex>^(UTF-8)$</regex>
+                                    <message>Le sourceEncoding doit être renseigné.</message>
+                                    <regexMessage>Le sourceEncoding doit être "UTF-8".</regexMessage>
+                                </requireProperty>
+                                <!-- Vérifie qu'est indiqué la version du JDK pour la compilation. -->
+                                <requireProperty>
+                                    <property>maven.compiler.release</property>
+                                    <regex>^(25)$</regex>
+                                    <message>La version du JDK (compiler.release) doit être 25.</message>
+                                </requireProperty>
                                 <!-- Vérifie que les propriétés existent et ont des valeurs valides. -->
                                 <requireProperty>
                                     <property>appType</property>
                                     <message>"appType" doit être défini.</message>
                                     <regex>^(graphic|console|library)$</regex>
                                     <regexMessage>La valeur doit être soit "graphic" soit "console" soit "library".</regexMessage>
+                                </requireProperty>
+                                <!-- Vérifie que la propriété "skipTests" existe. -->
+                                <requireProperty>
+                                    <property>skipTests</property>
+                                    <message>"skipTests" doit être défini.</message>
+                                    <regex>^(false|true)$</regex>
+                                    <regexMessage>"skipTests" doit être soit "true" soit "false".</regexMessage>
                                 </requireProperty>
                             </rules>
                             <fail>true</fail>
@@ -51,7 +75,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.4.0</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -67,7 +91,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.11.2</version>
+                <version>3.12.0</version>
                 <executions>
                     <execution>
                         <id>attach-javadoc</id>
@@ -116,7 +140,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.13</version>
+                <version>0.8.14</version>
                 <configuration>
                     <skip>${skipTests}</skip>
                 </configuration>
@@ -162,7 +186,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.3</version>
+                <version>3.5.4</version>
                 <configuration>
                     <skipTests>${skipTests}</skipTests>
                 </configuration>
@@ -181,15 +205,14 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.12.2</version>
+            <version>6.0.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.release>25</maven.compiler.release>
         <!-- Type d'application : "graphic", "console" ou "library". -->
         <appType>library</appType>
         <!-- Indique si on saute ou non les tests (et du coup le coverage mode). -->

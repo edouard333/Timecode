@@ -62,7 +62,6 @@ public final class TimecodeTest {
         Timecode tc = new Timecode();
 
         assertEquals("-1", tc.toString(), "Quand il n'y a pas de timecode, cela doit retourner '-1'.");
-        //System.out.println("tc : " + tc.toString());
 
         TimecodeRuntimeException exceptionInput = assertThrows(TimecodeRuntimeException.class, () -> {
             Timecode tc2 = new Timecode("00:00:00");
@@ -195,24 +194,19 @@ public final class TimecodeTest {
      */
     @Test
     public void testDropFrame() {
-        Timecode fromImage;
-        Timecode fromSmpte;
-
         for (int i = 0; i < /*24 **/ 60 * 60 * 30; i++) {
-            fromImage = new Timecode(i, Framerate.F2997);
-            fromSmpte = new Timecode(fromImage.toString().replace(";", ":"), Framerate.F2997);
+            Timecode fromImage = new Timecode(i, Framerate.F2997);
+            Timecode fromSmpte = new Timecode(fromImage.toString().replace(";", ":"), Framerate.F2997);
 
             boolean erreur = false;
 
             // En nombre d'image:
             if (i != fromImage.toImage() || i != fromSmpte.toImage()) {
-                //System.out.println("Erreur (toImage) : " + i);
                 erreur = true;
             }
 
             // En format SMPTE :
             if (!fromImage.toString().equals(fromSmpte.toString())) {
-                //System.out.println("Erreur (toString) : " + i);
                 erreur = true;
             }
 
