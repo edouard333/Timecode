@@ -1,5 +1,5 @@
 # Timecode
- Librairie gérant le timecode.
+Librairie gérant le timecode.
 
 # Comment l'utiliser ?
 ```java
