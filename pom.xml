@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.phenix</groupId>
     <artifactId>timecode</artifactId>
-    <version>0.8.4</version>
+    <version>0.8.5</version>
     <packaging>jar</packaging>
     
     <name>Timecode</name>
@@ -71,72 +71,56 @@
                 </executions>
             </plugin>
             
-            <!-- Ajoute le code source dans Maven. -->
+            <!-- Analyse la qualité du code et fait un rapport. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.4.0</version>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.6.0</version>
+                
+                <dependencies>
+                    <!-- Version de Checkstyle. -->
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>10.12.3</version>
+                    </dependency>
+                </dependencies>
+                
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <consoleOutput>false</consoleOutput>
+                    <!-- On ne veut pas arrêter le build pour une violation de standard. -->
+                    <failOnViolation>false</failOnViolation>
+                    <failsOnError>false</failsOnError>
+                    <linkXRef>false</linkXRef>
+                    <!-- CheckStyle n'arrive pas à décoder les "module-info.java". -->
+                    <excludes>
+                        **/module-info.java
+                    </excludes>
+                </configuration>
+
                 <executions>
                     <execution>
-                        <id>attach-sources</id>
-                        <phase>verify</phase>
+                        <id>checkstyle</id>
+                        <phase>validate</phase>
                         <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        
-            <!-- Ajoute la JavaDoc dans Maven. -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.12.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadoc</id>
-                        <goals>
-                            <goal>jar</goal>
+                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
             
-            <!-- Génère des checksums. -->
+            <!-- Fait les tests. -->
             <plugin>
-                <groupId>net.nicoulaj.maven.plugins</groupId>
-                <artifactId>checksum-maven-plugin</artifactId>
-                <version>1.11</version>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>files</goal>
-                        </goals>
-                        <configuration>
-                            <fileSets>
-                                <!-- Inclure les fichiers de build Maven. -->
-                                <fileSet>
-                                    <directory>${project.build.directory}</directory>
-                                    <includes>
-                                        <include>*-${project.version}.jar</include>
-                                        <include>*-${project.version}-sources.jar</include>
-                                        <include>*-${project.version}-javadoc.jar</include>
-                                    </includes>
-                                </fileSet>
-                            </fileSets>
-                            <csvSummaryFile>checksums-${project.version}.csv</csvSummaryFile>
-                            <!-- L'algorithme de hash. -->
-                            <algorithms>
-                                <algorithm>SHA-1</algorithm>
-                                <algorithm>MD5</algorithm>
-                            </algorithms>
-                        </configuration>
-                    </execution>
-                </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.4</version>
+                <configuration>
+                    <skipTests>${skipTests}</skipTests>
+                </configuration>
             </plugin>
             
-            <!-- Pour le coverage mode. -->
+            <!-- Fait les tests avec un coverage mode. -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -172,7 +156,7 @@
                                         <limit>
                                             <counter>LINE</counter>  <!-- Vérifie le % de lignes couvertes. -->
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.01</minimum> <!-- Fixe le seuil à 1%. -->
+                                            <minimum>0.56</minimum> <!-- Fixe le seuil à 56%. -->
                                         </limit>
                                     </limits>
                                 </rule>
@@ -182,14 +166,70 @@
                 </executions>
             </plugin>
             
-            <!-- Pour permettre d'utiliser vraiment JUnit... en tout cas l'annotation "@BeforeEach". -->
+            <!-- Ajoute la JavaDoc dans Maven. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.4</version>
-                <configuration>
-                    <skipTests>${skipTests}</skipTests>
-                </configuration>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.12.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadoc</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- Ajoute le code source dans Maven. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.4.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- Génère des checksums. -->
+            <plugin>
+                <groupId>net.nicoulaj.maven.plugins</groupId>
+                <artifactId>checksum-maven-plugin</artifactId>
+                <version>1.11</version>
+                <executions>
+                    <execution>
+                        <id>checksum-package</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>files</goal>
+                        </goals>
+                        <configuration>
+                            <fileSets>
+                                <!-- Inclure les fichiers de build Maven. -->
+                                <fileSet>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>*-${project.version}.jar</include>
+                                        <include>*-${project.version}-javadoc.jar</include>
+                                        <include>*-${project.version}-sources.jar</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                            <csvSummaryFile>checksums-${project.version}.csv</csvSummaryFile>
+                            <!-- L'algorithme de hash. -->
+                            <algorithms>
+                                <algorithm>SHA-1</algorithm>
+                                <algorithm>MD5</algorithm>
+                            </algorithms>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
