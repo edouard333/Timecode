@@ -4,7 +4,9 @@ import com.phenix.timecode.exception.TimecodeException;
 import com.phenix.timecode.exception.TimecodeRuntimeException;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -381,7 +383,7 @@ public final class Timecode {
     }
 
     /**
-     * Retourne si le timecode est dans l'interval des timecodes in et out
+     * Retourne si le timecode est dans l'interval des timecodes in et out.
      *
      * @param tc Le timecode à vérifier.
      * @param tcIn Timecode in.
@@ -523,6 +525,80 @@ public final class Timecode {
     }
 
     /**
+     * Converti un timecode continu en un timecode en bobine.
+     *
+     * @param timecodeContinu Le timecode en continu.
+     * @param listeBobine Liste des bobines.
+     * @return Le timecode en bobine, sinon {@code null}.
+     */
+    public static Timecode timecodeContinuToReel(@NotNull Timecode timecodeContinu, @NotNull List<Part> listeBobine) {
+        int tcImage = timecodeContinu.toImage(true);
+
+        for (Part bobine : listeBobine) {
+            if (tcImage < bobine.getDureeImage()) {
+                Timecode timecodeBobine = new Timecode(tcImage + bobine.getStartTimecodeImage(), timecodeContinu.framerate);
+                timecodeBobine.setStartTimecode(bobine.getStartTimecode().toString());
+                return timecodeBobine;
+            } else {
+                tcImage -= bobine.getDureeImage();
+            }
+        }
+
+        // Hors scope TC.
+        return null;
+    }
+
+    /**
+     * Converti un timecode en bobine en continu.
+     *
+     * @param timecodeBobine Le timecode en bobine.
+     * @param listeBobine La liste doit être dans l'ordre (bobine 1, bobine 2,
+     * etc).
+     * @return Le timecode en continu.
+     */
+    public static Timecode timecodeReelToContinu(@NotNull Timecode timecodeBobine, @NotNull List<Part> listeBobine) {
+        return timecodeReelToContinu(timecodeBobine, listeBobine, null);
+    }
+
+    /**
+     * Converti un timecode en bobine en continu.
+     *
+     * @param timecodeBobine Le timecode en bobine.
+     * @param listeBobine La liste doit être dans l'ordre (bobine 1, bobine 2,
+     * etc).
+     * @param startTimecode Le timecode début en continu, peut être
+     * {@code null}.
+     * @return Le timecode en continu.
+     */
+    @Null
+    public static Timecode timecodeReelToContinu(@NotNull Timecode timecodeBobine, @NotNull List<Part> listeBobine, @Null String startTimecode) {
+        for (int i = 0; i < listeBobine.size(); i++) {
+            // Si les starts TC sont les mêmes, c'est cette bobine :
+            if (listeBobine.get(i).getStartTimecode().toString().equals(timecodeBobine.timecodeDebut)) {
+                int nombreImage = timecodeBobine.toImage(true);
+
+                // On ne traite pas l'ajout du TC de la bobine actuel.
+                // Et on doit ajouter la bobine 1.
+                for (i--; i >= 0; i--) {
+                    nombreImage += listeBobine.get(i).getDureeImage();
+                }
+
+                Timecode timecodeContinu = new Timecode(nombreImage + new Timecode(startTimecode, timecodeBobine.framerate).toImage(), timecodeBobine.framerate);
+
+                // Si c'est null, on ne fait rien.
+                if (startTimecode != null) {
+                    timecodeContinu.setStartTimecode(startTimecode);
+                }
+
+                return timecodeContinu;
+            }
+        }
+
+        // Si on ne trouve pas, on retourne null.
+        return null;
+    }
+
+    /**
      * Retourne la représentation en nombre d'images le timecode (depuis
      * "<em>00:00:00:00</em>").
      *
@@ -648,7 +724,7 @@ public final class Timecode {
             }
 
             return ok;
-        } // Si une conversion de nombre n'a pas fonctionné c'est que le TC n'est pas conforme. 
+        } // Si une conversion de nombre n'a pas fonctionné c'est que le TC n'est pas conforme.
         catch (NumberFormatException exception) {
             return false;
         }

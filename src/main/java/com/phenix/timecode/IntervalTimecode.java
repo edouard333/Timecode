@@ -23,17 +23,19 @@ public final class IntervalTimecode {
     private Timecode tcOut;
 
     /**
+     * Un interval.
      *
      * @param tcIn Timecode in.
      * @param tcOut Timecode out.
      * @param framerate Le framerate des deux timecodes.
      */
-    public IntervalTimecode(@NotNull @NotBlank String tcIn, @NotNull @NotBlank String tcOut, Framerate framerate) {
+    public IntervalTimecode(@NotNull @NotBlank String tcIn, @NotNull @NotBlank String tcOut, @NotNull Framerate framerate) {
         this.tcIn = new Timecode(tcIn, framerate);
         this.tcOut = new Timecode(tcOut, framerate);
     }
 
     /**
+     * Un interval.
      *
      * @param tcIn Timecode in.
      * @param tcOut Timecode out.
@@ -44,24 +46,27 @@ public final class IntervalTimecode {
     }
 
     /**
+     * Retourne {@code true} si le timecode est dans l'interval.
      *
-     * @param tc
-     * @return
+     * @param tc Le timecode à vérifier.
+     * @return {@code true} si le TC est dans l'interval.
      */
     public boolean dedans(@NotNull @NotBlank String tc) {
         return this.dedans(new Timecode(tc, this.tcIn.getFramerate()));
     }
 
     /**
+     * Retourne {@code true} si le timecode est dans l'interval.
      *
-     * @param tc
-     * @return
+     * @param tc Le timecode à vérifier.
+     * @return {@code true} si le TC est dans l'interval.
      */
     public boolean dedans(@NotNull @NotBlank Timecode tc) {
         return tc.entre(this.tcIn, this.tcOut);
     }
 
     /**
+     * Retourne le timecode in.
      *
      * @return Le timecode in.
      */
@@ -71,6 +76,7 @@ public final class IntervalTimecode {
     }
 
     /**
+     * Retourne le timecode out.
      *
      * @return Le timecode out.
      */
